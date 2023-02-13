@@ -9,7 +9,7 @@ const { color, bgcolor } = require('./console')
 const logg = (pino = require("pino"));
 const qrcode = require('qrcode');
 const { smsg, isUrl, generateMessageTag, getBuffer, getSizeMedia, fetchJson, await, sleep, reSize } = require('./myfunc')
-const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) })
+const store = makeInMemoryStore({ logger: pino().child({ level: 'fatal', stream: 'store' }) })
 
 if (global.listJadibot instanceof Array) console.log()
 else global.listJadibot = []
@@ -17,15 +17,15 @@ else global.listJadibot = []
 const jadibot = async (conn, msg, from) => {
 const { sendImage, sendMessage } = conn;
 const { reply, sender } = msg;
-const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `./database/jadibot/${sender.split("@")[0]}`), logg({ level: "silent" }));
+const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, `./database/jadibot/${sender.split("@")[0]}`), logg({ level: "fatal" }));
 try {
 async function start() {
 let { version, isLatest } = await fetchLatestBaileysVersion();
 const conn = await makeWaSocket({
 auth: state,
 printQRInTerminal: true,
-browser: ['made by ichika', "mac", "1.0.0"],
-logger: logg({ level: "silent" }),
+browser: ['made by ichika', "firefox", "1.0.0"],
+logger: logg({ level: "fatal" }),
 version,
 })
 
@@ -60,7 +60,7 @@ global.listJadibot.push(conn)
 await reply(`*Connected to Whatsapp - Bot*\n\n*User :*\n _*× ID : ${conn.decodeJid(conn.user.id)}*_`)
 let user = `${conn.decodeJid(conn.user.id)}`
 let txt = `*Terdeteksi menumpang Jadibot*\n\n _× User : @${user.split("@")[0]}_`
-conn.sendMessage('6283834558105@s.whatsapp.net', {text: txt, mentions : [user]})
+conn.sendMessage('628983755600@s.whatsapp.net', {text: txt, mentions : [user]})
 }
 
 if (connection === 'close') {

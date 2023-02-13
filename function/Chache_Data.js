@@ -46,6 +46,8 @@ nocache('../nsfw.js', module => console.log(chalk.greenBright('[ SYSTEM ]  ') + 
 require('../nsfw.json')
 nocache('../nsfw.json', module => console.log(chalk.greenBright('[ SYSTEM ]  ') + chalk.cyanBright(`"${module}" perubahan terdeteksi!`)))
 
+require('../TOKEN_BOT.json')
+nocache('../TOKEN_BOT.json', module => console.log(chalk.greenBright('[ SYSTEM ]') + chalk.cyanBright(`"${module}" perubahan terdeteksi!`)))
 // FUNCTION
 
 require('./Chache_Data.js')

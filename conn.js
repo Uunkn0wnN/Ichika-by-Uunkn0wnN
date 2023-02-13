@@ -709,48 +709,49 @@ fs.unlinkSync(PathAuto + sender.split('@')[0] + '.json')
 //fs.unlinkSync(PathAuto + sender.split('@')[0] + '.json')
 //}
 //}
-else if (command === 'stalknpm') {
-if (!fs.existsSync(PathAuto + sender.split("@")[0] + ".json")) {
-var deposit_object = {
-ID: require("crypto").randomBytes(5).toString("hex").toUpperCase(),
-session: "stalknpm",
-data: {
-id_nya: ""
-}
-}
-fs.writeFileSync(PathAuto + sender.split("@")[0] + ".json", JSON.stringify(deposit_object, null, 2))
-reply("*Silahkan kirim Username Npm*\n*Contoh:* hikki-me")
-} else {
-reply("Username npmnya mana kak?")
-}
-}
+//else if (command === 'stalknpm') {
+//if (!fs.existsSync(PathAuto + sender.split("@")[0] + ".json")) {
+//var deposit_object = {
+//ID: require("crypto").randomBytes(5).toString("hex").toUpperCase(),
+//session: "stalknpm",
+//data: {
+//id_nya: ""
+//}
+//}
+//fs.writeFileSync(PathAuto + sender.split("@")[0] + ".json", JSON.stringify(deposit_object, null, 2))
+//reply("*Silahkan kirim Username Npm*\n*Contoh:* hikki-me")
+//} else {
+//reply("Username npmnya mana kak?")
+//}
+//}
+//
+//if (fs.existsSync(PathAuto + sender.split("@")[0] + ".json")) {
+//if (!chats.startsWith(prefix) && !msg.key.fromMe) {
+//let data_deposit = JSON.parse(fs.readFileSync(PathAuto + sender.split("@")[0] + ".json"))
+//if (data_deposit.session === "stalknpm") {
+//data_deposit.data.id_nya = (chats)
 
-if (fs.existsSync(PathAuto + sender.split("@")[0] + ".json")) {
-if (!chats.startsWith(prefix) && !msg.key.fromMe) {
-let data_deposit = JSON.parse(fs.readFileSync(PathAuto + sender.split("@")[0] + ".json"))
-if (data_deposit.session === "stalknpm") {
-data_deposit.data.id_nya = (chats)
-
-var x = await fetchJson(`https://api.popcat.xyz/npm?q=${data_deposit.data.id_nya}`)
-if (x.error) return reply('Username tidak ditemukan\nSilahkan kirim username Npm yg benar.')
-data_deposit.session = "use_npmstalk";
-fs.writeFileSync(PathAuto + sender.split("@")[0] + ".json", JSON.stringify(data_deposit, null, 3));
-var npm_text =`*NPM STALKER*
-name : ${x.name}
-version : ${x.version}
-description : ${x.description}
-author : ${x.author}
-author_email : ${x.author_email}
-last_published : ${x.last_published}
-maintainers : ${x.maintainers}
-repository : ${x.repository}
-
-keywords : ${x.keywords}`
-reply(npm_text)
-fs.unlinkSync(PathAuto + sender.split('@')[0] + '.json')
-}
-}
-} else if (command === 'stalkgithub') {
+//var x = await fetchJson(`https://api.popcat.xyz/npm?q=${data_deposit.data.id_nya}`)
+//if (x.error) return reply('Username tidak ditemukan\nSilahkan kirim username Npm yg benar.')
+//data_deposit.session = "use_npmstalk";
+//fs.writeFileSync(PathAuto + sender.split("@")[0] + ".json", JSON.stringify(data_deposit, null, 3));
+//var npm_text =`*NPM STALKER*
+//name : ${x.name}
+//version : ${x.version}
+//description : ${x.description}
+//author : ${x.author}
+//author_email : ${x.author_email}
+//last_published : ${x.last_published}
+//maintainers : ${x.maintainers}
+//repository : ${x.repository}
+//
+//keywords : ${x.keywords}`
+//reply(npm_text)
+//fs.unlinkSync(PathAuto + sender.split('@')[0] + '.json')
+//}
+//}
+//} 
+else if (command === 'stalkgithub') {
 if (!fs.existsSync(PathAuto + sender.split("@")[0] + ".json")) {
 var deposit_object = {
 ID: require("crypto").randomBytes(5).toString("hex").toUpperCase(),
@@ -2235,19 +2236,6 @@ headerType: 1
 conn.sendMessage(from, brotjk_menu, {quoted:ngabs})
 }
 break
-case 'kontaknya':
-if (!isOwner) return reply(mess.OnlyOwner)
-const sendkontak = (jid, numbers, name, quoted, mn) => {
-let number = numbers.replace(/[^0-9]/g, '')
-const vcards = 'BEGIN:VCARD\n' 
-+ 'VERSION:3.0\n' 
-+ 'FN:satrio\n'
-+ 'ORG:github;\n'
-+ 'TEL;type=CELL;type=VOICE;waid=' + number + ':+' + number + '\n'
-+ 'END:VCARD'
-return conn.sendMessage(from, { contacts: { displayName:'satrio', contacts: [{ vcards }] }, mentions : mn ? mn : []},{ quoted:msg })
-}
-break
 case 'donate':
 case 'donasi':{
 var monoSpace = '```'
@@ -2258,6 +2246,25 @@ break
 case 'infoowner':
 case 'ownerinfo':{
 reply(infoOwner())
+}
+break
+
+//NASA CMDS
+case 'apod':{
+if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
+reply('Apod is : Astronomy Picture of the Day')
+fetchJson(`https://api.nasa.gov/planetary/apod?api_key=mcGtINwayUCJfW0FxHMyxg9htQSA9qtdcp2wbQGr`)
+.then(ap =>{
+var text_apod =`*Astronomy Picture of the Day*
+
+> *title:* ${ap.title}
+> *date:* ${ap.date}
+> *copyright:* ${ap.copyright}
+> *explanation:* ${ap.explanation}`
+conn.sendMessage(from, { image:{url:ap.hdurl}, caption:text_apod}, {quoted:ngabs})
+}).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 // search
@@ -2318,6 +2325,28 @@ var text_mangatoon =`*MANGATOON SEARCH*
 conn.sendMessage(from, { image:{url:'https://a.uguu.se/YGBgEypl.png'}, caption:text_mangatoon}, {quoted:msg})
 })
 }
+break
+// NPM
+case 'npm':
+if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
+if (!q) return reply(`Contoh:\n${prefix+command} neofetch`)
+fetchJson(`https://api.popcat.xyz/npm?q=${q}`)
+.then(npm =>{
+reply(`*NPM*
+
+> name : "${npm.name}"
+> version : "${npm.version}"
+> author : "${npm.author}"
+> email : "${npm.author_email}"
+> last published : "${npm.last_published}
+> maintainers : "${npm.maintainers}"
+> downloader : "${npm.downloads_this_year}"
+> description : "${npm.description}"
+> keywords : "${npm.keywords}"
+> repository : "${npm.repository}"`)
+}).catch((e) => {
+  reply(require('util').format(e))
+})
 break
 // otakudesu
 case 'otakudesu':
@@ -2544,6 +2573,8 @@ reply(`*LINK PREVIEW*
 *Note:*
 jika reply message status null
 itu artinya tidak ditemukan.`)
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 break
 case 'google':
@@ -2555,6 +2586,8 @@ fetchJson(`https://api.lolhuman.xyz/api/gsearch?apikey=${setting.api_lolkey}&que
 reply(`*GOOGLE*
 ${gs.result.map(x => `┏ title: ${x.title}\n┝ desc: ${x.desc}\n┗ link: ${x.link}`).join('\n\n')}
 `)
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 break
 // style text
@@ -2661,6 +2694,8 @@ var text_lirik =`*LYRICS SEARCH*
 *artist:* ${lk.artist}
 *lyrics:* ${lk.lyrics}`
 conn.sendMessage(from, { image:{url:lk.image}, caption:text_lirik}, {quoted:msg})
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 break
 case 'truth':
@@ -2678,6 +2713,9 @@ var buttons = [
 ]
 conn.sendMessage(from, { image:{url:`http://carolineteselle.com/live/wp-content/uploads/2014/10/truth-or-dare_large.jpg`}, caption:truth_dare, footer: 'TRUTH OR DARE', buttons}, {quoted:msg})
 //conn.sendMessage(from, { image:{url:`http://carolineteselle.com/live/wp-content/uploads/2014/10/truth-or-dare_large.jpg`}, caption:truth_dare}, {quoted:msg})
+}).
+catch((e) => {
+  reply(util.format(e))
 })
 break
 case 'steam':{
@@ -2693,6 +2731,8 @@ var text_steam =`*STEAM SEARCH*
 *description:* ${st.description}
 *website:* ${st.website}`
 conn.sendMessage(from, { image:{url:st.banner}, caption:text_steam}, {quoted:msg})
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 }
 break
@@ -2711,6 +2751,8 @@ var text_itunes =`*ITUNES SEARCH*
 *price:* ${it.price}
 *url:* ${it.url}`
 conn.sendMessage(from, { image:{url:it.thumbnail}, caption:text_itunes}, {quoted:msg})
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 }
 break
@@ -2752,7 +2794,9 @@ var kanan = q.split('+')[1]
 if (!kiri) return reply(`Kirim emoji kiri`)
 if (!kanan) return reply(`Kirim emoji kanan`)
 let buffer = `https://api.rhobot.my.id/api/maker/emojimix?emoji1=${encodeURIComponent(kiri)}&emoji2=${encodeURIComponent(kanan)}`
-conn.sendMessage(from, { sticker:{url:buffer}, mimetype:'image/webp'}, { quoted: msg })
+conn.sendMessage(from, { sticker:{url:buffer}, mimetype:'image/webp'}, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 //case 'attp2':
@@ -2793,6 +2837,17 @@ fetchJson(`https://api.rhobot.my.id/api/search/googleimage?text=${q}`)
 .then(ppn =>{
 var media = pickRandom(ppn.result.url)
 conn.sendMessage(from, { image:{url:media}, caption:`Done *${q}*`}, {quoted:msg})
+}).catch((e) => {
+  reply(require('util').format(e))
+})
+break
+case 'biden':
+if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
+if (!q) return reply(`contoh:\n${prefix+command} express`)
+reply(mess.wait)
+let biden =`https://api.popcat.xyz/biden?text=${q}`
+conn.sendMessage(from, { image:{url:biden}, caption:`${command} ${q}`}, {quoted:ngabs}).catch((e) => {
+  reply(require('util').format(e))
 })
 break
 case 'image':
@@ -2874,6 +2929,8 @@ Media sedang dikirim.`
 reply(text_playmp4)
 conn.sendMessage(sender, {video:{url:zz.result.url}, caption:'Done!'}, {quoted:msg})
 if (isGroup) return reply('Media sudah dikirim dichat pribadi.')
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 break
 case 'yts':
@@ -2888,6 +2945,8 @@ var text_ytsearch =`YOUTUBE SEARCH
 
 ${ys.result.map(ys => `• title : "${ys.title}"\n• type : "${ys.tyle}"\n• duration : "${ys.seconds}" seconds\n• timestamp : "${ys.timestamp}"\n• uploaded : "${ys.ago}"\n• views : "${ys.views}"\n• videoId : "${ys.videoId}"\n• url : "${ys.url}"\n• description :\n"${ys.description}"`).join('\n\n')}`
 conn.sendMessage(from, { image:{url:yts.image}, caption:text_ytsearch}, {quoted:msg})
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 break
 case 'mediafire':
@@ -2917,6 +2976,7 @@ case 'botstats':
 case 'infobot':
 case 'botinfo':
 case 'stats':
+case 'stat':
 case 'status':
 case 'info':
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
@@ -2984,7 +3044,7 @@ fileName: 'BOT STATUS 😁',
 caption: bot_stats,
 mentions: [sender],
 }
-conn.sendMessage(from, stats_bot, {quoted:msg})
+conn.sendMessage(from, stats_bot, {quoted:ngabs})
 })
 break
 case 'ss':		
@@ -3168,7 +3228,6 @@ room +=`*ID ROOM ${x.id}*
 *CHAT2: @${x.b.split('@')[0]}*
 *STATUS: ${x.state}*\n\n`
 }
-reply(room)
 }
 break
 case 'premium':{
@@ -3594,7 +3653,9 @@ await sleep(3000)
 var user_bot = await fs.readFileSync(`./${q}`)
 
 // Sending Document
-conn.sendMessage(from, { document: user_bot, mimetype: 'document/application', fileName: `${q}`}, {quoted:msg})
+conn.sendMessage(from, { document: user_bot, mimetype: 'document/application', fileName: `${q}`}, {quoted:msg}).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 // line
@@ -3928,7 +3989,7 @@ const sections = [
 	    {title: "| audio menu", rowId: ".listaudio", description: "──────"},
 	    {title: "| cek menu", rowId: ".listcekmenu", description: "──────"},
 	    {title: "|wallpaper menu", rowId: ".listwallpaper", description: "──────"},
-	    {title: "| anime menh", rowId: ".listanime", description: "──────"},
+	    {title: "| anime menu", rowId: ".listanime", description: "──────"},
 	    {title: "| cerpen menu", rowId: ".listcerpen", description: "──────"},
 	    {title: "| sound menu", rowId: ".listsound", description: "──────"},
 	    {title: "| textpro menu", rowId: ".listtextpro", description: "──────"},
@@ -4524,7 +4585,9 @@ var media_url = (await UploadFileUgu(media)).url
 var meme_url = `https://api.memegen.link/images/custom/${encodeURIComponent(atas)}/${encodeURIComponent(bawah)}.png?background=${media_url}`
 var opt = { packname: 'ichika MD', author: 'By satrio' }
 conn.sendImageAsSticker(from, meme_url, msg, opt)
-fs.unlinkSync(media)
+fs.unlinkSync(media).catch((e) => {
+  reply(require('util').format(e))
+})
 } else {
 reply(`Kirim gambar dengan caption ${prefix+command} text_atas|text_bawah atau balas gambar yang sudah dikirim`)
 }
@@ -4551,32 +4614,34 @@ reply(mess.wait)
 var media = await conn.downloadAndSaveMediaMessage(msg, 'video', `./sticker/${sender}.jpeg`)
 var opt = { packname: pname, author: athor }
 conn.sendImageAsSticker(from, media, msg, opt)
-fs.unlinkSync(media)
+fs.unlinkSync(media).catch((e) => {
+  reply(require('util').format(e))
+})
 } else {
 reply(`Kirim video/foto dengan caption ${prefix+command} packname|author atau balas video/foto yang sudah dikirim`)
 }
 break
-case 'sticker': case 's': case 'stiker':
-if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
-if (isImage || isQuotedImage){
+//case 'sticker': case 's': case 'stiker':
+//if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
+//if (isImage || isQuotedImage){
 await conn.downloadAndSaveMediaMessage(msg, "image", `./sticker/${sender.split("@")[0]}.jpeg`)
-let buffer = fs.readFileSync(`./sticker/${sender.split("@")[0]}.jpeg`)
-reply(mess.wait)
-var rand1 = 'sticker/'+getRandom('.jpeg')
-var rand2 = 'sticker/'+getRandom('.webp')
-fs.writeFileSync(`${rand1}`, buffer)
-ffmpeg(`./${rand1}`)
-.on("error", console.error)
-.on("end", () => {
-exec(`webpmux -set exif ./sticker/data.exif ./${rand2} -o ./${rand2}`, async (error) => {
-conn.sendMessage(from, { sticker: fs.readFileSync(`./${rand2}`) }, { quoted: msg })
-fs.unlinkSync(`./${rand1}`)
-fs.unlinkSync(`./sticker/${sender.split("@")[0]}.jpeg`)
-fs.unlinkSync(`./${rand2}`)})}).addOutputOptions(["-vcodec", "libwebp", "-vf", "scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse"]).toFormat('webp').save(`${rand2}`)
-} else {
-reply(`Kirim gambar dengan caption ${prefix+command} atau balas gambar yang sudah dikirim`)
-}
-break
+//let buffer = fs.readFileSync(`./sticker/${sender.split("@")[0]}.jpeg`)
+//reply(mess.wait)
+//var rand1 = 'sticker/'+getRandom('.jpeg')
+//var rand2 = 'sticker/'+getRandom('.webp')
+//fs.writeFileSync(`${rand1}`, buffer)
+//ffmpeg(`./${rand1}`)
+//.on("error", console.error)
+//.on("end", () => {
+//exec(`webpmux -set exif ./sticker/data.exif ./${rand2} -o ./${rand2}`, async (error) => {
+//conn.sendMessage(from, { sticker: fs.readFileSync(`./${rand2}`) }, { quoted: msg })
+//fs.unlinkSync(`./${rand1}`)
+//fs.unlinkSync(`./sticker/${sender.split("@")[0]}.jpeg`)
+//fs.unlinkSync(`./${rand2}`)})}).addOutputOptions(["-vcodec", "libwebp", "-vf", "scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse"]).toFormat('webp').save(`${rand2}`)
+//} else {
+//reply(`Kirim gambar dengan caption ${prefix+command} atau balas gambar yang sudah dikirim`)
+//}
+//break
 case 'sgif':
 case 'stickergif':
 case 'stikergif':
@@ -4592,7 +4657,9 @@ ffmpeg(`./${rand1}`)
 .on("error", console.error)
 .on("end", () => {
 exec(`webpmux -set exif ./sticker/data.exif ./${rand2} -o ./${rand2}`, async (error) => {
-conn.sendMessage(from, { sticker: fs.readFileSync(`./${rand2}`) }, { quoted: msg })
+conn.sendMessage(from, { sticker: fs.readFileSync(`./${rand2}`) }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 fs.unlinkSync(`./${rand1}`)
 fs.unlinkSync(`./${rand2}`)
 fs.unlinkSync(buffer)
@@ -4626,20 +4693,26 @@ break
 case 'blackpink':case 'neon':case 'greenneon':case 'advanceglow':case 'futureneon':case 'sandwriting':case 'sandsummer':case 'sandengraved':case 'metaldark':case 'neonlight':case 'holographic':case 'text1917':case 'minion':case 'deluxesilver':case 'newyearcard':case 'bloodfrosted':case 'halloween':case 'jokerlogo':case 'fireworksparkle':case 'natureleaves':case 'bokeh':case 'toxic':case 'strawberry':case 'box3d':case 'roadwarning':case 'breakwall':case 'icecold':case 'luxury':case 'cloud':case 'summersand':case 'horrorblood':case 'thunder':{
 if (!q) return reply(`_Contoh_\n${prefix+command} nama`)
 reply(mess.wait)
-conn.sendMessage(from, { image: { url: `https://api.lolhuman.xyz/api/textprome/${command}?apikey=${setting.api_lolkey}&text=${q}`}, caption: `Nih ${command}📸` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: `https://api.lolhuman.xyz/api/textprome/${command}?apikey=${setting.api_lolkey}&text=${q}`}, caption: `Nih ${command}📸` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 //=====================qrcode test=====================\\
 case 'qrcode':{
 if (!q) return reply(`_Contoh_\n${prefix+command} nama`)
 reply(mess.wait)
-conn.sendMessage(from, { image: { url: `https://api.qrserver.com/v1/create-qr-code/?size=1024x1024&data=${q}`}, caption: `Nih ${command}📸` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: `https://api.qrserver.com/v1/create-qr-code/?size=1024x1024&data=${q}`}, caption: `Nih ${command}📸` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 case 'mcskin':{
 if (!q) return reply(`_Contoh_\n${prefix+command} nama`)
 reply(mess.wait)
-conn.sendMessage(from, { image: { url: `https://minotar.net/armor/body/${q}/700.png`}, caption: `Nih ${command}📸` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: `https://minotar.net/armor/body/${q}/700.png`}, caption: `Nih ${command}📸` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 // PHOTOOXY
@@ -4651,28 +4724,36 @@ if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 if (!q) return reply(`_Contoh_\n${prefix+command} nama`)
 reply(mess.wait)
 let photooxy =`https://api.nataganz.com/api/photooxy/${command}?text=${q}&apikey=Pasha`
-conn.sendMessage(from, {image: { url: photooxy }, caption: `Hasil dari ${command}`}, { quoted: msg})
+conn.sendMessage(from, {image: { url: photooxy }, caption: `Hasil dari ${command}`}, { quoted: msg}).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 case 'wetglass':case 'multicolor3d':case 'watercolor':case 'luxurygold':case 'galaxywallpaper':case 'lighttext':case 'beautifulflower':case 'puppycute':case 'royaltext':case 'heartshaped':case 'birthdaycake':case 'galaxystyle':case 'hologram3d':case 'greenneon':case 'glossychrome':case 'greenbush':case 'metallogo':case 'noeltext':case 'glittergold':case 'textcake':case 'starsnight':case 'wooden3d':case 'textbyname':case 'writegalacy':case 'galaxybat':case 'snow3d':case 'birthdayday':case 'goldplaybutton':case 'silverplaybutton':case 'freefire':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 if (!q) reply(`Contoh: #${command} nama`)
 reply(mess.wait)
-conn.sendMessage(from, { image: { url: `https://api.lolhuman.xyz/api/ephoto1/${command}?apikey=${setting.api_lolkey}&text=${q}`}, caption: `Nih ${command}📸` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: `https://api.lolhuman.xyz/api/ephoto1/${command}?apikey=${setting.api_lolkey}&text=${q}`}, caption: `Nih ${command}📸` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 case 'shadow':case 'cup':case 'cup1':case 'romance':case 'smoke':case 'burnpaper':case 'lovemessage':case 'undergrass':case 'love':case 'coffe':case 'woodheart':case 'woodenboard':case 'summer3d':case 'wolfmetal':case 'nature3d':case 'underwater':case 'goldenrose':case 'summernature':case 'letterleaves':case 'glowingneon':case 'fallleaves':case 'flamming':case 'harrypotter':case 'carvedwood':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 if (!q) reply(`Contoh: #${command} nama`)
 reply(mess.wait)
-conn.sendMessage(from, { image: { url: `https://api.lolhuman.xyz/api/photooxy1/${command}?apikey=${setting.api_lolkey}&text=${q}`}, caption: `Nih ${command}📸` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: `https://api.lolhuman.xyz/api/photooxy1/${command}?apikey=${setting.api_lolkey}&text=${q}`}, caption: `Nih ${command}📸` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 case 'boneka': case 'cecan': case 'cogan': case 'darkjokes': case 'islamic': case 'mobil': case 'programing': case 'tatasurya': case 'wallhp':
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 const x35  = JSON.parse(fs.readFileSync(`./function/Random_IMAGE/${command}.json`)); 
 const x36 = x35[Math.floor(Math.random() * (x35.length))]
-conn.sendMessage(from, {image:{url:x36}, caption:"Done!", mentions:[sender]},{quoted:msg})
+conn.sendMessage(from, {image:{url:x36}, caption:"Done!", mentions:[sender]},{quoted:msg}).catch((e) => {
+  reply(require('util').format(e))
+})
 break
 
 // PREMIUM ONLY
@@ -4710,14 +4791,18 @@ case 'chiisaihentai':case 'trap':case 'blowjob':case 'yaoi':case 'ecchi':case 'a
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 if (cekUser("premium", sender) == false) return reply(mess.OnlyPrem)
 reply(mess.wait)
-conn.sendMessage(from, { image: { url: `https://api.lolhuman.xyz/api/random/nsfw/${command}?apikey=${setting.api_lolkey}`}, caption: `Nih ${command}📸` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: `https://api.lolhuman.xyz/api/random/nsfw/${command}?apikey=${setting.api_lolkey}`}, caption: `Nih ${command}📸` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 case 'bj':case 'ero':case 'cum':case 'feet':case 'yuri':case 'trap':case 'lewd':case 'feed':case 'eron':case 'solo':case 'gasm':case 'poke':case 'anal':case 'holo':case 'tits':case 'kuni':case 'kiss':case 'erok':case 'smug':case 'baka':case 'solog':case 'feetg':case 'lewdk':case 'waifu':case 'pussy':case 'femdom':case 'cuddle':case 'hentai':case 'eroyuri':case 'cum_jpg':case 'blowjob':case 'erofeet':case 'holoero':case 'classic':case 'erokemo':case 'fox_girl':case 'futanari':case 'lewdkemo':case 'wallpaper':case 'pussy_jpg':case 'kemonomimi':case 'nsfw_avatar':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 if (cekUser("premium", sender) == false) return reply(mess.OnlyPrem)
 reply(mess.wait)
-conn.sendMessage(from, { image: { url: `https://api.lolhuman.xyz/api/random2/${command}?apikey=${setting.api_lolkey}`}, caption: `Nih ${command}📸` }, { quoted: msg})
+conn.sendMessage(from, { image: { url: `https://api.lolhuman.xyz/api/random2/${command}?apikey=${setting.api_lolkey}`}, caption: `Nih ${command}📸` }, { quoted: msg}).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 case 'spamcall':{
@@ -4756,12 +4841,17 @@ if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 if (cekUser("premium", sender) == false) return reply(mess.OnlyPrem)
 reply("[❗] SEDANG DIPROSES")
 fetchJson(`https://api.waifu.pics/sfw/${command}`).then(x => {
-conn.sendMessage(from, {image:{url:x.url}, caption:"Done!!", mentions:[sender]},{quoted:msg})})
+conn.sendMessage(from, {image:{url:x.url}, caption:"Done!!", mentions:[sender]},{quoted:msg}).catch((e) => {
+  reply(require('util').format(e))
+})
+})
 break
 case 'akira':case 'akiyama':case 'anna':case 'asuna':case 'ayuzawa':case 'boruto':case 'chiho':case 'chitoge':case 'deidara':case 'eba':case 'elaina':case 'emilia':case 'erza':case 'gremory':case 'hestia':case 'hinata':case 'inori':case 'isuzu':case 'itachi':case 'itori':case 'kaga':case 'kagura':case 'kaori':case 'kaneki':case 'kotori':case 'kurumi':case 'madara':case 'megumin':case 'mikasa':case 'miku':case 'minato':case 'naruto':case 'nezuko':case 'onepiece':case 'rize':case 'sagiri':case 'sakura':case 'sasuke':case 'shina':case 'shinka':case 'shinomia':case 'shizuka':case 'tejina':case 'toukachan':case 'tsunade':case 'yotsuba':case 'yuki':case 'yumeko':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 reply(mess.wait)
-conn.sendMessage(from, { image: { url: `https://nsfw.rhobot.my.id/${command}`}, caption: `Nih ${command}📸` }, { quoted: msg})
+conn.sendMessage(from, { image: { url: `https://nsfw.rhobot.my.id/${command}`}, caption: `Nih ${command}📸` }, { quoted: msg}).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 break
@@ -4774,7 +4864,9 @@ case 'bucinstick':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 reply(mess.wait)
 let buffer = `https://api.lolhuman.xyz/api/sticker/${command}?apikey=${setting.api_lolkey}`
-conn.sendMessage(from, { sticker:{url:buffer}, mimetype:'image/webp'}, { quoted: msg })
+conn.sendMessage(from, { sticker:{url:buffer}, mimetype:'image/webp'}, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 // PRIMBON
@@ -5120,7 +5212,9 @@ if (cekUser("premium", sender) == false) return reply(mess.OnlyPrem)
 reply(mess.wait)
 let cle = await fetchJson(`https://raw.githubusercontent.com/Uunkn0wnN/Uunkn0wnN-wangsaff/main/fetch/nsfw/other/${command}.json`)
 let random = cle[Math.floor(Math.random() * cle.length)]
-conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 // NSFW FETCH GITHUB
@@ -5490,7 +5584,9 @@ if (cekUser("premium", sender) == false) return reply(mess.OnlyPrem)
 reply(mess.wait)
 let kcle = await fetchJson(`https://raw.githubusercontent.com/Uunkn0wnN/Uunkn0wnN-wangsaff/main/fetch/nsfw/2d-other/2d-toys-onani.json`)
 let random = kcle[Math.floor(Math.random() * kcle.length)]
-conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 //=====================WALLPAPER=====================\\
@@ -5498,21 +5594,27 @@ case 'wallpaperislami':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 let kcle = await fetchJson(`https://raw.githubusercontent.com/Aprilia3/RestApi/master/data/Islamic.json`)
 let random = kcle[Math.floor(Math.random() * kcle.length)]
-conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 case 'wallpaperinori':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 let kuxe = await fetchJson(`https://raw.githubusercontent.com/qisyana/senku/main/storages/inori-pic.json`)
 let random = kuxe[Math.floor(Math.random() * kuxe.length)]
-conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 case 'wallpapercyber':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 let xpwl = await fetchJson(`https://raw.githubusercontent.com/Aprilia3/RestApi/master/data/CyberSpace.json`)
 let random = xpwl[Math.floor(Math.random() * xpwl.length)]
-conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 
@@ -5527,49 +5629,63 @@ if (cekUser("premium", sender) == false) return reply(mess.OnlyPrem)
 reply(mess.wait)
 let eek = await fetchJson(`https://raw.githubusercontent.com/Arya-was/endak-tau/main/${command}.json`)
 let random = eek[Math.floor(Math.random() * eek.length)]
-conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 case 'wallpaperteknologi':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 let toth = await fetchJson(`https://raw.githubusercontent.com/Aprilia3/RestApi/master/data/Technology.json`)
 let random = toth[Math.floor(Math.random() * toth.length)]
-conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 case 'wallpaperanime':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 let tozs = await fetchJson(`https://raw.githubusercontent.com/qisyana/senku/main/storages/anime-wallpaper-pic.json`)
 let random = tozs[Math.floor(Math.random() * tozs.length)]
-conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 case 'wallpapergamer':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 let toew = await fetchJson(`https://raw.githubusercontent.com/Aprilia3/RestApi/master/data/GameWallp.json`)
 let random = toew[Math.floor(Math.random() * toew.length)]
-conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 case 'wallpaperprogamer':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 let xeke = await fetchJson(`https://raw.githubusercontent.com/Aprilia3/RestApi/master/data/Programming.json`)
 let random = xeke[Math.floor(Math.random() * xeke.length)]
-conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 case 'wallpapermeme':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 let crkr = await fetchJson(`https://raw.githubusercontent.com/Aprilia3/RestApi/master/data/meme.json`)
 let random = crkr[Math.floor(Math.random() * crkr.length)]
-conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 case 'wallpaper':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 let crpe = await fetchJson(`https://raw.githubusercontent.com/Aprilia3/RestApi/master/data/Mountain.json`)
 let random = crpe[Math.floor(Math.random() * crpe.length)]
-conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: random }, caption: `Nih Kak` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 case 'ppcouple': {
@@ -5577,7 +5693,9 @@ if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 let anu = await fetchJson('https://raw.githubusercontent.com/iamriz7/kopel_/main/kopel.json')
 let random = anu[Math.floor(Math.random() * anu.length)]
 conn.sendMessage(from, { image: { url: random.male }, caption: `Foto Couple Male` }, { quoted: msg })
-conn.sendMessage(from, { image: { url: random.female }, caption: `Fofo Couple Female` }, { quoted: msg })
+conn.sendMessage(from, { image: { url: random.female }, caption: `Fofo Couple Female` }, { quoted: msg }).catch((e) => {
+  reply(require('util').format(e))
+})
 }
 break
 
@@ -6219,8 +6337,8 @@ conn.sendMessage(from,{video:{url:fb.result.sd}, caption:'SD!'}, {quoted:msg})
 conn.sendMessage(sender,{video:{url:fb.result.sd}, caption:'SD!'}, {quoted:msg})
 conn.sendMessage(from, {audio:{url:fb.result.audio}, mimetype:'audio/mpeg', fileName: fb.result.title+'mp3'}, {quoted:msg})
 conn.sendMessage(sender, {audio:{url:fb.result.audio}, mimetype:'audio/mpeg', fileName: fb.result.title+'mp3'}, {quoted:msg})
-}).catch((err) => {
-reply('Terjadi Kesalahan!!\nserver sedang error')
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 }
 break
@@ -6245,8 +6363,8 @@ conn.sendMessage(from,{video:{url:ig_res.result.url}, caption:`nih ${command}`},
 conn.sendMessage(from,{image:{url:ig_res.result.url}, caption:`nih ${command}`}, {quoted:msg})
 conn.sendMessage(sender,{video:{url:ig_res.result.url}, caption:`nih ${command}`}, {quoted:msg})
 conn.sendMessage(sender,{image:{url:ig_res.result.url}, caption:`nih ${command}`}, {quoted:msg})
-}).catch((err) => {
-reply(`Terjadi Kesalahan!!\n${ig_res.message}`)
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 }
 break
@@ -6269,10 +6387,10 @@ itu artinya url tidak ditemukan.`
 conn.sendMessage(from, { image:{url:tt.result.pp}, caption:text_tiktok}, {quoted:msg})
 conn.sendMessage(from,{video:{url:tt.result.video}, caption:`nih ${command}`}, {quoted:msg})
 conn.sendMessage(sender,{video:{url:tt.result.video}, caption:`nih ${command}`}, {quoted:msg})
-conn.sendMessage(from,{audio:{url:xx.result.audio}, caption:`nih ${command}`}, {quoted:msg})
-conn.sendMessage(sender,{audio:{url:xx.result.audio}, caption:`nih ${command}`}, {quoted:msg})
-}).catch((err) => {
-reply('Terjadi Kesalahan!!\nUrl tidak valid')
+conn.sendMessage(from,{audio:{url:tt.result.audio}, caption:`nih ${command}`}, {quoted:msg})
+conn.sendMessage(sender,{audio:{url:tt.result.audio}, caption:`nih ${command}`}, {quoted:msg})
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 }
 break
@@ -6294,8 +6412,8 @@ conn.sendMessage(from, { image:{url:xx.result.thumb}, caption:text_ytmp4}, {quot
 conn.sendMessage(from,{video:{url:xx.result.url}, caption:`nih ${command}`}, {quoted:msg})
 conn.sendMessage(sender,{video:{url:xx.result.url}, caption:`nih ${command}`}, {quoted:msg})
 if (isGroup) return conn.sendMessage(from, {text:'video sudah dikirim lewat chat pribadi bot.'}, {quoted:msg})
-}).catch((err) => {
-reply(`${xx.message}!!\nUrl tidak valid`)
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 }
 break
@@ -6317,8 +6435,8 @@ conn.sendMessage(from, { image:{url:zx.result.thumb}, caption:text_ytmp3}, {quot
 conn.sendMessage(from,{audio:{url:zx.result.url}, caption:`nih ${command}`}, {quoted:msg})
 conn.sendMessage(sender,{audio:{url:zx.result.url}, caption:`nih ${command}`}, {quoted:msg})
 if (isGroup) return conn.sendMessage(from, {text:'Audio sudah dikirim lewat chat pribadi bot.'}, {quoted:msg})
-}).catch((err) => {
-reply(`${zx.message}!!\nUrl tidak valid`)
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 }
 break
@@ -6336,8 +6454,8 @@ conn.sendMessage(from,{video:{url:tw.result.HD}, caption:`nih ${command}`}, {quo
 conn.sendMessage(sender,{video:{url:tw.result.HD}, caption:`nih ${command}`}, {quoted:msg})
 conn.sendMessage(sender,{video:{url:tw.result.SD}, caption:`nih ${command}`}, {quoted:msg})
 if (isGroup) return conn.sendMessage(from, {text:'video sudah dikirim lewat chat pribadi bot.'}, {quoted:msg})
-}).catch((err) => {
-reply('Terjadi Kesalahan!!\nUrl tidak valid')
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 }
 break
@@ -6359,8 +6477,8 @@ var text_stalktt = `STALK TIKTOK
 > *videos* : ${st.result.videos}
 > *likes* : ${st.result.likes}`
 conn.sendMessage(from, { image:{url:st.result.ppurl}, caption:text_stalktt}, {quoted:ngabs})
-}).catch((err) => {
-reply('Terjadi Kesalahan!!\nUrl tidak valid')
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 }
 break
@@ -6384,8 +6502,8 @@ var text_igstalk = `INSTAGRAM STALK
 > postsCount : ${igs.result.postsCount}
 > postsCountM : ${igs.result.postsCountM}`
 conn.sensMessage(from, { image:{url:igs.result.profilePicHD}, caption:text_igstalk}, {quoted:msg})
-}).catch((err) => {
-reply('terjadi kesalahan!!\nurl tidak valid')
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 break
 case 'stalkff':
@@ -6401,12 +6519,48 @@ var text_ff = `
 nickname : ${ff.result.nickname}
 id : ${ff.result.id}`
 conn.sendMessage(from,{image:{url:'https://akcdn.detik.net.id/visual/2019/06/27/0e45db78-dc02-40f9-8bfa-1f0bf8196344_169.jpeg'}, caption:text_ff}, {quoted:msg})
-}).catch((err) => {
-reply('Terjadi Kesalahan!!\nUrl tidak valid')
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 }
 break
+// WOTB COY
+case 'searchplayer':
+case 'playersearch':
+if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
+if (!q) return reply(`*Contoh:*\n${prefix+command} YARZ`)
+reply(mess.wait)
+fetchJson(`https://api.wotblitz.asia/wotb/account/list/?application_id=1c6513eeeaa950110a31da8ebafecad0&search=${q}`)
+.then(wt=>{
+const wotb =['https://media.discordapp.net/attachments/880848797264130099/1009428865975857252/unknown.png','https://media.discordapp.net/attachments/880848797264130099/1009428866323988490/unknown.png','https://media.discordapp.net/attachments/880848797264130099/1009428866684690442/unknown.png','https://media.discordapp.net/attachments/880848797264130099/1009428867016036352/unknown.png','https://media.discordapp.net/attachments/880848797264130099/1009428867334811779/unknown.png','https://media.discordapp.net/attachments/880848797264130099/1009428867678752798/unknown.png']
+const wotb_image = wotb[Math.floor(Math.random() * wotb.length)]
+var text_wotb =`WOTB PLAYER SEARCH
 
+${wt.data.map(wtb => `• nickname : "${wtb.nickname}"\n• id : "${wtb.account_id}"`).join('\n\n')}`
+conn.sendMessage(from, { image:{url:`${wotb_image}`}, caption:text_wotb}, {quoted:ngabs})
+}).catch((e) => {
+  reply(require('util').format(e))
+})
+break
+case 'dataplayer':
+case 'playerdata':
+if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
+if (!q) return reply(`*Contoh:*\n${prefix+command} 2034140358`)
+reply(mess.wait)
+fetchJson(`https://api.wotblitz.asia/wotb/account/info/?application_id=1c6513eeeaa950110a31da8ebafecad0&account_id=${q}`)
+.then(wtt=>{
+const wotbb =['https://media.discordapp.net/attachments/880848797264130099/1009428865975857252/unknown.png','https://media.discordapp.net/attachments/880848797264130099/1009428866323988490/unknown.png','https://media.discordapp.net/attachments/880848797264130099/1009428866684690442/unknown.png','https://media.discordapp.net/attachments/880848797264130099/1009428867016036352/unknown.png','https://media.discordapp.net/attachments/880848797264130099/1009428867334811779/unknown.png','https://media.discordapp.net/attachments/880848797264130099/1009428867678752798/unknown.png']
+const wotb_iimage = wotbb[Math.floor(Math.random() * wotbb.length)]
+var text_wootb =`WOTB PLAYER DATA
+
+${wtt.data}
+
+`
+conn.sendMessage(from, { image:{url:`${wotb_iimage}`}, caption:text_wootb}, {quoted:ngabs})
+}).catch((e) => {
+  reply(require('util').format(e))
+})
+break
 // testing
 case 'vid':{
 reply(mess.wait)
@@ -6423,14 +6577,15 @@ Video sedang dikirim...
 jika reply message status undefined
 itu artinya url tidak ditemukan.`)
 conn.sendMessage(from,{video:{url:ts.result}, caption:`nih ${command}`}, {quotes:msg})
-}).catch((err) => {
-reply('Terjadi Kesalahan!!\nUrl tidak valid')
+}).catch((e) => {
+  reply(require('util').format(e))
 })
 }
 break
-//test 
+// CONSOLE
 case 'eval':
 if (!isOwner) return reply(mess.OnlyOwner)
+reply(mess.wait)
 try {
 reply(JSON.stringify(eval(q), null, 3))
 } catch (ers) {
@@ -6438,13 +6593,17 @@ reply(ers.toString())
 }
 break
 case 'term':
+case '$':
+case '>':
 if (!isOwner) return reply(mess.OnlyOwner)
+reply(mess.wait)
 exec(q, (err, stdout) => {	
 if (err) return reply(err.toString())
 if (stdout) return reply(stdout)
 })
 break
 case 'getquoted':
+reply(mess.wait)
 reply(JSON.stringify(msg.message.extendedTextMessage.contextInfo, null, 3))
 break
 default:

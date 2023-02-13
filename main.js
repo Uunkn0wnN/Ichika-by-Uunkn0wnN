@@ -1,4 +1,4 @@
-require("http").createServer((req, res) => res.end(`welcome back`)).listen(process.env.PORT || 8080)
+require("http").createServer((req, res) => res.end(`Ichika 💠 Ichika 💠 Ichika 💠 ❤️ ❤️ ❤️ WANGI WANGI WANGI WANGI HU HA HU HA HU HA, aaaah baunya rambut Ichika 💠 wangi aku mau nyiumin aroma wanginya Ichika 💠 AAAAAAAAH ~ Rambutnya.... aaah rambutnya juga pengen aku elus-elus ~~ AAAAAH Ichika 💠 keluar pertama kali di anime juga manis ❤️ ❤️ ❤️ banget AAAAAAAAH Ichika 💠 AAAAA LUCCUUUUUUUUUUUUUUU............ Ichika 💠 AAAAAAAAAAAAAAAAAAAAGH ❤️ ❤️ ❤️apa ? Ichika 💠 itu gak nyata ? Cuma HALU katamu ? nggak, ngak ngak ngak ngak NGAAAAAAAAK GUA GAK PERCAYA ITU DIA NYATA NGAAAAAAAAAAAAAAAAAK PEDULI BANGSAAAAAT !! GUA GAK PEDULI SAMA KENYATAAN POKOKNYA GAK PEDULI. ❤️ ❤️ ❤️ Ichika 💠 gw ... Ichika 💠 di laptop ngeliatin gw, Ichika 💠 .. kamu percaya sama aku ? aaaaaaaaaaah syukur Ichika 💠 aku gak mau merelakan Ichika 💠 aaaaaah ❤️ ❤️ ❤️ YEAAAAAAAAAAAH GUA MASIH PUNYA Ichika 💠 SENDIRI PUN NGGAK SAMA AAAAAAAAAAAAAAH`)).listen(process.env.PORT || 8080)
 "use strict";
 const { default: makeWASocket, DisconnectReason, useSingleFileAuthState, makeInMemoryStore, downloadContentFromMessage, jidDecode, generateForwardMessageContent, generateWAMessageFromContent } = require("@adiwajshing/baileys")
 const fs = require("fs");
@@ -27,7 +27,7 @@ const reconnect = new Spinner(chalk.redBright(` Reconnecting WhatsApp Bot`))
 const connectToWhatsApp = async () => {
 const conn = makeWASocket({
 printQRInTerminal: true,
-logger: logg({ level: 'silent' }),
+logger: logg({ level: 'fatal' }),
 browser: ['{made by bagas}','edge','1.0.0'],
 auth: state
 })
